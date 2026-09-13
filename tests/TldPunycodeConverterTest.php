@@ -31,10 +31,6 @@ class TldPunycodeConverterTest extends TestCase
      */
     public function testNativeScriptTldIsConvertedToPunycode(string $native, string $expectedPunycode): void
     {
-        if (! function_exists('idn_to_ascii')) {
-            $this->markTestSkipped('ext-intl is not available.');
-        }
-
         $this->assertSame($expectedPunycode, $this->converter->toPunycode($native));
     }
 

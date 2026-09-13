@@ -42,7 +42,7 @@ class App
 
         if (! $validator->isValid($tld)) {
             http_response_code(404);
-            echo json_encode($this->buildResponse($tld, $rawTld, false), JSON_UNESCAPED_UNICODE);
+            echo json_encode(['tld' => $tld, 'valid' => false]);
 
             return;
         }
@@ -51,21 +51,7 @@ class App
         $exists = $repository->exists($tld);
 
         http_response_code($exists ? 200 : 404);
-        echo json_encode($this->buildResponse($tld, $rawTld, $exists), JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * @return array{tld: string, valid: bool, input?: string}
-     */
-    protected function buildResponse(string $tld, string $rawTld, bool $valid): array
-    {
-        $response = ['tld' => $tld, 'valid' => $valid];
-
-        if ($rawTld !== $tld) {
-            $response['input'] = $rawTld;
-        }
-
-        return $response;
+        echo json_encode(['tld' => $tld, 'valid' => $exists]);
     }
 
     protected function buildFetcher(): DatabaseFetcher
@@ -115,10 +101,9 @@ class App
 
     <h2>Response</h2>
     <p>JSON body, in both success and failure cases. <code>tld</code> is always the canonical ASCII
-    form. An <code>input</code> field is added when it differs from what was actually requested
-    (e.g. a native-script TLD, or different casing):</p>
+    (punycode) form:</p>
     <pre>{"tld": "com", "valid": true}
-{"tld": "xn--mix891f", "valid": true, "input": "澳門"}</pre>
+{"tld": "xn--mix891f", "valid": true}</pre>
 
     <table>
         <tr><th>HTTP status</th><th>Meaning</th></tr>
@@ -131,7 +116,7 @@ class App
 200 {"tld":"com","valid":true}
 
 GET /澳門
-200 {"tld":"xn--mix891f","valid":true,"input":"澳門"}
+200 {"tld":"xn--mix891f","valid":true}
 
 GET /notarealtld
 404 {"tld":"notarealtld","valid":false}</pre>

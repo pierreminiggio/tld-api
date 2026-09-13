@@ -11,14 +11,14 @@ GET /{tld}
 
 `{tld}` peut être donné en ASCII (ex. `com`, `xn--p1ai`) ou directement dans son script d'origine
 (ex. `рф`, `澳門`, `한국`) — il est automatiquement converti vers sa forme punycode canonique avant
-d'être vérifié (nécessite l'extension PHP `intl`).
+d'être vérifié. La conversion est faite en PHP pur (implémentation de l'algorithme Punycode, RFC 3492),
+sans dépendre de l'extension `intl`.
 
-Réponse JSON dans tous les cas. `tld` est toujours la forme ASCII canonique ; un champ `input` est
-ajouté quand il diffère de ce qui a été réellement demandé (TLD en script natif, ou casse différente) :
+Réponse JSON dans tous les cas. `tld` est toujours la forme ASCII (punycode) canonique :
 
 ```json
 {"tld": "com", "valid": true}
-{"tld": "xn--mix891f", "valid": true, "input": "澳門"}
+{"tld": "xn--mix891f", "valid": true}
 ```
 
 | Code HTTP | Signification |

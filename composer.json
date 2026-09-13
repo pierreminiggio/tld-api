@@ -22,7 +22,6 @@
     "require": {
         "php": ">=8.0",
         "ext-curl": "*",
-        "ext-intl": "*",
         "pierreminiggio/config-provider": "^1.0",
         "pierreminiggio/database-fetcher": "^1.0"
     },
